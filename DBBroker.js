@@ -1,12 +1,17 @@
 const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('admin_db','admin','admin',{
     port:"5433",
-    dialect: "postgres"
+    dialect: "postgres",
+    define: {
+        freezeTableName: true,
+    },
 })
 
 try {
     sequelize.authenticate();
     console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
+} catch (error) {
+console.error('Unable to connect to the database:', error);
+}
+
+module.exports = sequelize;
