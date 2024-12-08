@@ -12,7 +12,7 @@ const User = sequelize.define('user',
             type: DataTypes.STRING,
             allowNull:false
         },
-        userName:{
+        username:{
             type: DataTypes.STRING,
             allowNull:false,
             unique: true
@@ -51,6 +51,11 @@ User.hasMany(Task,{
         allowNull: false
     },
 })
-Task.belongsTo(User)
+Task.belongsTo(User,{
+    foreignKey: {
+        name: "user_id",
+        allowNull: false
+    },
+})
 
 module.exports = User;

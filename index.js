@@ -20,10 +20,16 @@ const documentation_URL = app_URL+documentation_route
 
 
 // Controller registration
-app.use("/user",require("./controllers/UserController"))
+app.use("/user",require("./controllers/UserTaskController"))
+app.use("/admin",require("./controllers/AdminTaskController"))
 
 // Serve Swagger documentation
 app.use(documentation_route, swaggerUI.serve, swaggerUI.setup(swaggerSpec));
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status).send('Error: '+err.message);
+});
 
 app.listen(PORT, () => {
     console.log(`Express server running at ${app_URL}`);

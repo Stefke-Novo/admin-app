@@ -1,5 +1,5 @@
 const { STRING,BIGINT, DATE } = require("sequelize")
-const sequelize = require("../DBBroker")
+const sequelize = require("../DBBroker");
 
 const Task  = sequelize.define('task',
     {
@@ -33,5 +33,4 @@ const Task  = sequelize.define('task',
         updatedAt: false,
     }
 )
-
 module.exports = Task;
