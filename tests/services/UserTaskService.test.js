@@ -1,16 +1,20 @@
+const Task = require("../../models/Task")
+jest.createMockFromModule('../../models/Task')
 const userService = require("../../services/UserTaskService")
-const Task = require("./../../models/Task")
-
-jest.mock('./../../models/Task')
 
 describe("UserService.create_task",()=>{
+
+    afterEach(() => {
+        jest.clearAllMocks();
+      });
 
     test("should return new Task instance id",()=>{
 
         //expected result
-        const new_task = 20
+        const new_task = 1
         //mocking task
-        Task.create.mockResolvedValue({"id":20})
+        Task.create = jest.fn()
+        Task.create.mockResolvedValueOnce({"id":1})
         //testing
         userService.create_task("body1","user1@gmail.com").then((result)=>{expect(result).toBe(new_task)})
     })
@@ -19,19 +23,44 @@ describe("UserService.create_task",()=>{
 
 describe("UserService.update_task",()=>{
 
-    test("should return updated task",()=>{
+    let task_to_update,expected_result;
+
+    beforeEach(() => {
         //chosing input 
-        const task_to_update = {id: 1, body: "body1"}
+        task_to_update = {id: 1, body: "body1"}
         // expected result
-        const expected_result = 1
+        expected_result = 1
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test("should return updated task",()=>{
+        
         //mocking task
-        Task.update.mockResolvedValue({"id": expected_result})
+        Task.update = jest.fn()
+        Task.update.mockResolvedValueOnce([1])
         //testing
         userService.update_task(task_to_update).then((result)=>expect(result).toBe(expected_result))
+    })
+
+    test("should throw Error",async ()=>{
+        //mocking task
+        Task.update = jest.fn()
+        Task.update.mockResolvedValueOnce([0])
+        //testing
+        userService.update_task(task_to_update).catch(error=>{
+            expect(error).toBeInstanceOf(Error)
+        })
     })
 })
 
 describe("UserService.all_tasks",()=>{
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
     test("return list of tasks",()=>{
         // chosing input
         const user = {email: "user1@gmail.com",role:"user"}
@@ -52,6 +81,7 @@ describe("UserService.all_tasks",()=>{
             }
         ]
         //mocking task
+        Task.findAndCountAll = jest.fn()
         Task.findAndCountAll.mockResolvedValue({count:2, rows: result_list})
         //testing
         userService.all_tasks(user,pagination).then((result)=>expect(result).toBe(result_list))

@@ -33,4 +33,5 @@ const Task  = sequelize.define('task',
         updatedAt: false,
     }
 )
+
 module.exports = Task;

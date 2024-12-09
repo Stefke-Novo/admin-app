@@ -6,7 +6,6 @@ async function create_task(body, email){
 }
 
 async function update_task({id, body}){
-    console.log("parameters:", id, body)
     const updated_task = await Task.update({body: body},{where : {id: id}});
     if(updated_task[0])
         return id;

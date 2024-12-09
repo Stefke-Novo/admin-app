@@ -93,6 +93,16 @@ TaskController.post("/create_task",
  *                       type: array
  *                       items:
  *                         type: string
+ *           examples:
+ *             example 1:
+ *               value:
+ *                 admin:
+ *                   email: "user1@gmail.com"
+ *                   role: "user"
+ *                 pagination:
+ *                   page: 2
+ *                   offset: 0
+ *                   order: [["created","ASC"]]
  *     responses:
  *       200:
  *         description: Successful response with list of tasks

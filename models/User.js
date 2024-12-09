@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize")
-const sequelize = require("./../DBBroker")
+const sequelize = require("../DBBroker")
 const Task = require("./Task")
 
 const User = sequelize.define('user',
@@ -46,10 +46,10 @@ const User = sequelize.define('user',
 )
 
 User.hasMany(Task,{
-    foreignKey: {
-        name: "user_id",
+    foreignKey:{
+        name:"user_id",
         allowNull: false
-    },
+    }
 })
 Task.belongsTo(User,{
     foreignKey: {

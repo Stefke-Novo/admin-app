@@ -42,6 +42,16 @@ const adminTaskController = Router()
  *                       type: array
  *                       items:
  *                         type: string
+ *           examples:
+ *             example 1:
+ *               value:
+ *                 admin:
+ *                   email: "user1@gmail.com"
+ *                   role: "admin"
+ *                 pagination:
+ *                   page: 2
+ *                   offset: 0
+ *                   order: [["created","ASC"]]
  *     responses:
  *       200:
  *         description: Successful response with list of tasks
@@ -70,8 +80,133 @@ const adminTaskController = Router()
  */
 adminTaskController.post("/all_tasks",admin_request_check,
     async (req,res)=>{
-        const {admin,pagination} = req.body
-        res.send(await adminTaskService.all_tasks(admin, pagination))
+        const pagination = req.body.pagination
+        res.send(await adminTaskService.all_tasks(pagination))
+    }
+)
+/**
+ * @swagger
+ * /admin/update_task:
+ *   post:
+ *     summary: return updated task for any user
+ *     tags: [Admin]
+ *     description: return updated task for any user
+ *     requestBody:
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               admin:
+ *                 type: object
+ *                 properties:
+ *                   role:
+ *                     type: string
+ *               task:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   body:
+ *                     type: string
+ *     responses:
+ *       200:
+ *         description: Successful response with updated task
+ *         content:
+ *           application/json:
+ *             schema: 
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *       401:
+ *         description: Unauthorized role
+ *         content:
+ *           text/plain:
+ *              example: Unauthorized role
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           text/plain:
+ *             example: Task with the id 31 is not registered
+ *       500:
+ *         description: Unexpected error
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Unexpected error
+ */
+adminTaskController.post("/update_task",admin_request_check,
+    async (req,res)=>{
+        const task = req.body.task
+        try{
+            res.send(200, {"id": await adminTaskService.update_task(task.id,task.body)})
+        }catch(error){
+            res.send(400, error.message)
+        }
+    }
+)
+/**
+ * @swagger
+ * /admin/delete_task:
+ *   post:
+ *     summary: return id of deleted task
+ *     tags: [Admin]
+ *     description: return id of deleted task
+ *     requestBody:
+ *       required: true
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               admin:
+ *                 type: object
+ *                 properties:
+ *                   role:
+ *                     type: string
+ *               task:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *     responses:
+ *       200:
+ *         description: Successful response with updated task
+ *         content:
+ *           application/json:
+ *             schema: 
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *       401:
+ *         description: Unauthorized role
+ *         content:
+ *           text/plain:
+ *              example: Unauthorized role
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           text/plain:
+ *             example: Task with the id 31 is not registered
+ *       500:
+ *         description: Unexpected error
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: Unexpected error
+ */
+adminTaskController.post("/delete_task",admin_request_check,
+    async (req,res)=>{
+        try{
+            res.send(200, {"id": await adminTaskService.delete_task(req.body.task.id)})
+        }catch(error){
+            res.send(400, error.message)
+        }
     }
 )
 
